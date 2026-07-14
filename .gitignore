@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Data (regenerate via load_data.py / 01_data_import.py rather than committing large binaries you re-derive locally)
+04_python_analytics/data/*.csv
+
+# Temp / build artifacts
+*.tmp
+~$*

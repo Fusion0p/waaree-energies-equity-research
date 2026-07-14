@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Waaree Energies — Executive Dashboard Preview</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --navy:#1F2A44; --navy2:#2A3A5C; --gold:#B08D57; --green:#1E6B3C; --red:#A32424;
+    --bg:#F4F5F7; --card:#FFFFFF; --border:#E3E6EC; --text:#222831; --muted:#6B7280;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);}
+  .topbar{background:var(--navy);color:#fff;padding:16px 28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+  .topbar h1{font-size:18px;margin:0;font-weight:600;letter-spacing:.3px;}
+  .topbar .sub{font-size:12px;color:#C9CEDA;margin-top:2px;}
+  .tabs{display:flex;gap:4px;background:var(--navy2);padding:0 24px;}
+  .tab{padding:11px 18px;color:#D7DBE6;cursor:pointer;font-size:13px;border-bottom:3px solid transparent;user-select:none;}
+  .tab.active{color:#fff;border-bottom:3px solid var(--gold);font-weight:600;}
+  .page{display:none;padding:20px 24px 40px;max-width:1500px;margin:0 auto;}
+  .page.active{display:block;}
+  .kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:18px;}
+  .kpi-row.narrow{grid-template-columns:repeat(5,1fr);}
+  .kpi{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:14px 16px;border-top:3px solid var(--gold);}
+  .kpi .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;}
+  .kpi .value{font-size:22px;font-weight:700;color:var(--navy);}
+  .kpi .delta{font-size:12px;margin-top:4px;font-weight:600;}
+  .delta.pos{color:var(--green);} .delta.neg{color:var(--red);}
+  .grid{display:grid;gap:14px;}
+  .grid-60-40{grid-template-columns:1.5fr 1fr;}
+  .grid-50-50{grid-template-columns:1fr 1fr;}
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:16px;}
+  .panel h3{margin:0 0 4px;font-size:14px;color:var(--navy);}
+  .panel .note{font-size:11px;color:var(--muted);margin-bottom:10px;}
+  .callout{background:#FBF3E7;border-left:3px solid var(--gold);padding:10px 12px;font-size:12px;color:#5A4A2E;border-radius:4px;margin-top:10px;}
+  canvas{max-height:280px;}
+  table.mini{width:100%;border-collapse:collapse;font-size:12px;}
+  table.mini th{background:var(--navy);color:#fff;padding:6px 8px;text-align:center;}
+  table.mini td{padding:6px 8px;text-align:center;border-bottom:1px solid var(--border);}
+  .heat-lo{background:#FBE2E2;} .heat-mid{background:#FDF3D8;} .heat-hi{background:#DDEEDC;}
+  .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;}
+  .badge.illustrative{background:#FBE2E2;color:var(--red);}
+  .footer-note{font-size:11px;color:var(--muted);margin-top:14px;text-align:center;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <h1>Waaree Energies Limited — Executive Dashboard (Preview)</h1>
+    <div class="sub">NSE: WAAREEENER · Part VI of the institutional research package · Preview of the Power BI report described in Dashboard_Layout_Spec.md</div>
+  </div>
+  <div class="sub">As of late Jun 2026</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-page="p1">1 · Executive Overview</div>
+  <div class="tab" data-page="p2">2 · Valuation &amp; Peer Comparison</div>
+  <div class="tab" data-page="p3">3 · Forecast &amp; Cash Flow Detail</div>
+</div>
+
+<!-- PAGE 1 -->
+<div class="page active" id="p1">
+  <div class="kpi-row">
+    <div class="kpi"><div class="label">Revenue (FY26)</div><div class="value">₹26,537 Cr</div><div class="delta pos">▲ 84.0% YoY</div></div>
+    <div class="kpi"><div class="label">EBITDA Margin</div><div class="value">22.3%</div><div class="delta pos">▲ 340 bps</div></div>
+    <div class="kpi"><div class="label">Net Profit</div><div class="value">₹3,884 Cr</div><div class="delta pos">▲ 101.5% YoY</div></div>
+    <div class="kpi"><div class="label">EPS</div><div class="value">₹129.02</div><div class="delta pos">▲ 105.6% YoY</div></div>
+    <div class="kpi"><div class="label">ROE</div><div class="value">32.5%</div><div class="delta neg">▼ from 34.0%</div></div>
+    <div class="kpi"><div class="label">Debt / Equity</div><div class="value">0.22x</div><div class="delta neg">▲ from 0.13x</div></div>
+  </div>
+
+  <div class="grid grid-60-40">
+    <div class="panel">
+      <h3>Revenue &amp; EBITDA Margin Trend</h3>
+      <div class="note">FY20–FY26 actuals · the operating-leverage story from Part I</div>
+      <canvas id="chartRevEbitda"></canvas>
+    </div>
+    <div class="panel">
+      <h3>Free Cash Flow (₹ Cr)</h3>
+      <div class="note">FY25–FY26 cash-conversion stress</div>
+      <canvas id="chartFCF"></canvas>
+      <div class="callout">FY26 CFO/EBITDA fell to 47% (from 143% in FY25) even as net profit grew 101% — the single most important flag from Part I.</div>
+    </div>
+  </div>
+
+  <div class="grid grid-50-50" style="margin-top:14px;">
+    <div class="panel">
+      <h3>Return on Equity vs. Return on Capital Employed</h3>
+      <canvas id="chartROE"></canvas>
+    </div>
+    <div class="panel">
+      <h3>Leverage — Debt / Equity (x)</h3>
+      <canvas id="chartDE"></canvas>
+    </div>
+  </div>
+  <div class="footer-note">Slicers (Fiscal Year, Company) would sit above this page in the live Power BI report — omitted here since this is a static preview.</div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="p2">
+  <div class="grid grid-50-50">
+    <div class="panel">
+      <h3>DCF Sensitivity — Intrinsic Value per Share (₹)</h3>
+      <div class="note">WACC (rows) × Terminal Growth (columns) · matches Excel Model &amp; Part II §2.4</div>
+      <table class="mini" id="heatmapTable"></table>
+    </div>
+    <div class="panel">
+      <h3>Monte Carlo Percentile Distribution</h3>
+      <div class="note">20,000 simulations · red dashed line = CMP ₹2,886</div>
+      <canvas id="chartMC"></canvas>
+    </div>
+  </div>
+
+  <div class="grid grid-50-50" style="margin-top:14px;">
+    <div class="panel">
+      <h3>Peer Multiple Comparison</h3>
+      <div class="note">⚠ mixed data vintage — see Part II §3.1</div>
+      <canvas id="chartPeers"></canvas>
+    </div>
+    <div class="panel">
+      <h3>Valuation Summary</h3>
+      <div class="kpi-row" style="grid-template-columns:1fr;gap:8px;">
+        <div class="kpi" style="border-top-color:var(--navy);"><div class="label">DCF Base Case</div><div class="value">₹2,146 <span style="font-size:13px;color:var(--red);font-weight:600;">(-25.6% vs CMP)</span></div></div>
+        <div class="kpi" style="border-top-color:var(--navy);"><div class="label">Monte Carlo Median</div><div class="value">₹2,121 <span style="font-size:13px;color:var(--muted);font-weight:600;">P(above CMP) ≈ 11%</span></div></div>
+        <div class="kpi" style="border-top-color:var(--navy);"><div class="label">Comps (EV/EBITDA, P/E avg)</div><div class="value">₹3,894 / ₹3,905 <span style="font-size:13px;color:var(--green);font-weight:600;">(+35% vs CMP)</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page" id="p3">
+  <div class="panel" style="margin-bottom:14px;">
+    <h3>Revenue — Actual vs. Forecast</h3>
+    <div class="note">Navy = actual (FY20–FY26) · Gold = forecast (FY27E–FY31E)</div>
+    <canvas id="chartRevForecast"></canvas>
+  </div>
+
+  <div class="grid grid-50-50">
+    <div class="panel">
+      <h3>Working Capital Days</h3>
+      <canvas id="chartWC"></canvas>
+    </div>
+    <div class="panel">
+      <h3>Cash Conversion Cycle (days)</h3>
+      <canvas id="chartCCC"></canvas>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:14px;">
+    <h3>Stock Price Trend <span class="badge illustrative">ILLUSTRATIVE DATA</span></h3>
+    <div class="note">Live market data isn't reachable from this environment — see Part IV README. Swap in real prices via 01_data_import.py.</div>
+    <canvas id="chartPrice"></canvas>
+  </div>
+</div>
+
+<script>
+const YEARS = ["FY20","FY21","FY22","FY23","FY24","FY25","FY26"];
+const YEARS_FULL = ["FY20","FY21","FY22","FY23","FY24","FY25","FY26","FY27E","FY28E","FY29E","FY30E","FY31E"];
+const NAVY="#1F2A44", GOLD="#B08D57", GREEN="#1E6B3C", RED="#A32424", GREY="#9AA1AC";
+
+const revenue = [1996,1953,2854,6751,11398,14444,26537];
+const revenueFcst = [35825,44781,53737,61798,69214];
+const ebitdaMargin = [4.7,4.4,3.7,12.4,13.8,18.8,22.3];
+const fcf = [32,-35,202,698,968,-114,-3209];
+const roe = [null,15.0,20.6,44.4,45.9,28.5,32.5];
+const roce = [null,9.9,8.6,45.9,38.1,30.6,34.7];
+const de = [0.53,0.99,0.85,0.17,0.14,0.13,0.22];
+const debtorDays=[26,22,12,17,31,30,34], invDays=[54,83,85,192,108,96,118], payDays=[67,99,83,143,84,91,63], ccc=[13,6,14,66,55,35,90];
+
+Chart.defaults.font.family = "'Segoe UI',Arial,sans-serif";
+Chart.defaults.font.size = 11;
+Chart.defaults.color = "#444";
+
+new Chart(document.getElementById('chartRevEbitda'), {
+  data:{labels:YEARS, datasets:[
+    {type:'bar', label:'Revenue (₹ Cr)', data:revenue, backgroundColor:NAVY, yAxisID:'y'},
+    {type:'line', label:'EBITDA Margin %', data:ebitdaMargin, borderColor:GOLD, backgroundColor:GOLD, yAxisID:'y1', tension:.3, pointRadius:3}
+  ]},
+  options:{responsive:true, scales:{
+    y:{position:'left', title:{display:true,text:'₹ Crore'}},
+    y1:{position:'right', title:{display:true,text:'EBITDA Margin %'}, grid:{drawOnChartArea:false}}
+  }}
+});
+
+new Chart(document.getElementById('chartFCF'), {
+  type:'bar', data:{labels:YEARS, datasets:[{label:'Free Cash Flow (₹ Cr)', data:fcf, backgroundColor: fcf.map(v=>v<0?RED:GREEN)}]},
+  options:{responsive:true, plugins:{legend:{display:false}}}
+});
+
+new Chart(document.getElementById('chartROE'), {
+  type:'line', data:{labels:YEARS, datasets:[
+    {label:'ROE %', data:roe, borderColor:NAVY, tension:.3},
+    {label:'ROCE %', data:roce, borderColor:GOLD, tension:.3}
+  ]}, options:{responsive:true}
+});
+
+new Chart(document.getElementById('chartDE'), {
+  type:'bar', data:{labels:YEARS, datasets:[{label:'Debt/Equity (x)', data:de, backgroundColor:'#7A6C5D'}]},
+  options:{responsive:true, plugins:{legend:{display:false}}}
+});
+
+// Sensitivity heatmap (rendered as HTML table since Chart.js has no native heatmap)
+const waccs = ["11.8%","12.8%","13.8%","14.8%","15.8%"];
+const gCols = ["3.0%","4.0%","5.0%","6.0%","7.0%"];
+const grid = [
+  [2291,2546,2876,3319,3947],
+  [2017,2212,2458,2776,3204],
+  [1794,1947,2136,2374,2681],
+  [1609,1733,1881,2064,2293],
+  [1455,1555,1674,1818,1994]
+];
+function heatClass(v){ if(v<1900) return 'heat-lo'; if(v<2600) return 'heat-mid'; return 'heat-hi'; }
+let html = '<tr><th>WACC ＼ g</th>' + gCols.map(g=>`<th>${g}</th>`).join('') + '</tr>';
+waccs.forEach((w,i)=>{
+  html += `<tr><td style="background:${NAVY};color:#fff;font-weight:700;">${w}</td>` +
+    grid[i].map(v=>`<td class="${heatClass(v)}">₹${v.toLocaleString()}</td>`).join('') + '</tr>';
+});
+document.getElementById('heatmapTable').innerHTML = html;
+
+new Chart(document.getElementById('chartMC'), {
+  type:'bar',
+  data:{labels:['P5','P10','P25','P50','P75','P90','P95'], datasets:[{
+    label:'Intrinsic Value/Share (₹)',
+    data:[1435,1565,1808,2121,2511,3005,3382],
+    backgroundColor:[1435,1565,1808,2121,2511,3005,3382].map(v => v > 2886 ? GREEN : RED)
+  }]},
+  options:{responsive:true, plugins:{legend:{display:false}}}
+});
+
+new Chart(document.getElementById('chartPeers'), {
+  type:'bar',
+  data:{labels:['Waaree','Premier Energies','Vikram Solar','Websol'], datasets:[
+    {label:'P/E (x)', data:[25.0,30.8,70.0,29.7], backgroundColor:NAVY},
+    {label:'EV/EBITDA (x)', data:[14.4,20.2,null,null], backgroundColor:GOLD}
+  ]}, options:{responsive:true}
+});
+
+new Chart(document.getElementById('chartRevForecast'), {
+  type:'bar',
+  data:{labels:YEARS_FULL, datasets:[
+    {label:'Actual', data:[...revenue, null,null,null,null,null], backgroundColor:NAVY},
+    {label:'Forecast', data:[null,null,null,null,null,null,null, ...revenueFcst], backgroundColor:GOLD}
+  ]}, options:{responsive:true, scales:{x:{stacked:false}}}
+});
+
+new Chart(document.getElementById('chartWC'), {
+  type:'line', data:{labels:YEARS, datasets:[
+    {label:'Debtor Days', data:debtorDays, borderColor:NAVY, tension:.3},
+    {label:'Inventory Days', data:invDays, borderColor:GOLD, tension:.3},
+    {label:'Payable Days', data:payDays, borderColor:GREEN, tension:.3}
+  ]}, options:{responsive:true}
+});
+
+new Chart(document.getElementById('chartCCC'), {
+  type:'bar', data:{labels:YEARS, datasets:[{label:'Cash Conversion Cycle (days)', data:ccc, backgroundColor: ccc.map((v,i)=> i===6?RED:GOLD)}]},
+  options:{responsive:true, plugins:{legend:{display:false}}}
+});
+
+// Illustrative monthly price series (matches Part IV calibration facts)
+const priceLabels = ["Oct-24","Dec-24","Feb-25","Apr-25","Jun-25","Aug-25","Oct-25","Dec-25","Feb-26","Apr-26","Jun-26"];
+const priceData = [1720,3450,3550,3150,2950,3650,4050,3550,3350,2750,2886];
+new Chart(document.getElementById('chartPrice'), {
+  type:'line', data:{labels:priceLabels, datasets:[{label:'Close Price (₹, illustrative)', data:priceData, borderColor:RED, backgroundColor:'rgba(163,36,36,0.08)', fill:true, tension:.35}]},
+  options:{responsive:true}
+});
+
+// Tabs
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.page).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

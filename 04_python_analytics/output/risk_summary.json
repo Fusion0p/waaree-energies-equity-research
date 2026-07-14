@@ -1,0 +1,9 @@
+{
+  "data_source": "ILLUSTRATIVE DATA (synthetic \u2014 see docstring)",
+  "annualized_return": -0.03806770161331141,
+  "annualized_volatility": 0.3404854197730858,
+  "sharpe_ratio": -0.3085820875482218,
+  "beta": 1.0307772340959507,
+  "alpha_daily": 1.0284298272932347e-05,
+  "r_squared": 0.1435010589259449
+}
